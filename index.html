@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alchemist’s Trials</title>
+<style>
+    body {
+        margin: 0;
+        background: #e9d8b6;
+        font-family: "Times New Roman", serif;
+        overflow: hidden;
+    }
+
+    #scroll-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.92);
+        width: 600px;
+        height: 820px;
+        background: #f7edcf;
+        border: 10px solid #6b4e2e;
+        padding: 40px;
+        box-shadow: 0 0 40px rgba(0,0,0,0.4);
+        animation: unroll 0.8s ease-out forwards;
+        overflow-y: auto;
+    }
+
+    #scroll-container p {
+        margin: 0.25em 0;
+        line-height: 1.35;
+        text-align: center;
+    }
+
+    @keyframes unroll {
+        from { transform: translate(-50%, -50%) scaleY(0.05); opacity: 0; }
+        to { transform: translate(-50%, -50%) scaleY(1); opacity: 1; }
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-top: 0;
+        color: #4b2e14;
+        text-align: center;
+        animation: shimmer 2.5s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { text-shadow: 0 0 4px rgba(255,255,255,0.4); }
+        50% { text-shadow: 0 0 14px rgba(255,255,255,0.9); }
+        100% { text-shadow: 0 0 4px rgba(255,255,255,0.4); }
+    }
+
+    p {
+        font-size: 17px;
+        color: #4a341b;
+        line-height: 1.5;
+        white-space: pre-line;
+    }
+
+    #nav-buttons {
+        margin-top: 25px;
+        text-align: center;
+    }
+
+    button {
+        background: #6f4a2e;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 0 10px;
+        border-radius: 6px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+    button:hover {
+        background: #8b5e3b;
+    }
+
+    #timer {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: #5b3b21;
+        margin-bottom: 15px;
+    }
+
+    /* Dust particles - stronger contrast */
+    .particle {
+        position: fixed;
+        background: rgba(120, 100, 70, 0.45);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: drift linear infinite;
+    }
+
+    @keyframes drift {
+        from { transform: translateY(-10vh); opacity: 0; }
+        30% { opacity: 1; }
+        to { transform: translateY(110vh); opacity: 0; }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- 🔊 Embedded Arcane Workshop Ambient Sound -->
+<audio id="ambientSound" autoplay loop>
+    <source type="audio/mp3" src="data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCAAAH///////////////////////////////8AAAAATGF2ZjU2LjI0LjEwNQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQxAADBcGgAOHb3H5gEME5AgAhRERERERERERERERERERERERERERERERERERERESIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiP/7kMQAAwXB4ADh21x+YBDBOQIAIUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/7kMQAAwXBsADht9x+YBDBOQIAIUEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERH//uQxAADBcGgAOHb3H5gEME5AgAhRESEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiP/7kMQAAwXB4ADh21x+YBDBOQIAA"/>
+</audio>
+
+
+<div id="scroll-container">
+    <div id="timer"></div>
+    <h1 id="title"></h1>
+    <p id="content"></p>
+
+    <div id="nav-buttons">
+        <button id="prevBtn" onclick="prevRiddle()">Previous</button>
+        <button id="nextBtn" onclick="nextRiddle()">Next</button>
+    </div>
+</div>
+
+<script>
+/* ------------------------ RIDDLE DATA ------------------------ */
+const riddles = [
+  {
+    title: "The Alchemist’s Covenant of Trials",
+    text: `<p><i>As decreed by <b>The Master Alchemist</b>, keeper of secrets and arbiter of fate.</i></p>
+
+<p><b>The Measure of Time</b>
+“For each enigma the Cube reveals, twenty minutes of mortal time are granted.
+Should the sands fall empty before the riddle is undone,
+a <i>Price of Forfeit</i> shall be claimed.
+Only <b>The Master Alchemist</b> knows the nature of this price,
+and its truth shall be spoken only when it is owed.”</p>
+
+<p><b>The Whisper of Guidance</b>
+“Any seeker may call upon <b>The Master Alchemist</b> for a Hint—
+a spark of wisdom to pierce the dark.
+Yet every such whisper carries a hidden cost.
+The <i>Price of Insight</i> is known only to <b>The Master Alchemist</b>
+and remains veiled until the moment it is accepted.”</p>
+
+<p><b>The Pact of Shared Hands</b>
+“Seekers may join their minds and bind their strengths,
+for even the keenest mind may falter alone.
+But know this: those who unite in solving the Cube
+must divide all <i>Prizes earned</i>,
+and share all <i>Burdens and Punishments</i> as one.”</p>`
+  },
+  {
+    title: "The Hidden Key",
+    text: `<p>“Four sigils guard the underworld, each gazing toward its twin above.
+Turn their faces to the arrows of fate, and the gate of secrets shall sigh open.
+There, in the chamber beneath the earth, waits the Philosopher’s first gift—
+metal not of metal, key not of key.”</p>`
+  },
+  {
+    title: "The Shifting Heavens",
+    text: `<p>“Six signs circle the sky, six mouths hunger for the Key of the Wise.
+Follow the constellation etched in plain sight,
+for the path of each star winds toward its destined hole.
+Turn the Key until symbol greets symbol at the world’s heart—
+Only then will heaven loosen its crown.”</p>`
+  },
+  {
+    title: "The Four Lost Coins",
+    text: `<p>“The first coin lies in the lair of the Key;
+the second clings to the underside of heaven.
+Seek then the ring that hides the third—unscrew the sun to reveal its shadow.
+The final coin dwells in the wheel whose soul is not like the others.
+Hold it fast, for metals untrue will turn beneath your touch.”</p>`
+  },
+  {
+    title: "The Core’s Ascension",
+    text: `<p>“Each coin bears a symbol flanked by twin mountains.
+These peaks point the traveler to the rightful face of the cube.
+Align the wheels so each face answers its coin.
+When all is true, the heart of the world may be lifted—
+grasp the ring of ages and draw the core from its cradle.”</p>`
+  },
+  {
+    title: "The Labyrinth Within",
+    text: `<p>“Beyond the heart lies the Serpent’s Path,
+a maze wound around a hollow cylinder,
+where left becomes right and up becomes down.
+Follow the serpent’s whisper through trial and error,
+and when its coils unbind, the final secret shall open.”</p>`
+  },
+  {
+    title: "The Alchemist’s Encore",
+    text: `<p>“Five letters hold the key, a promise sung through endless years.
+Trace them to their place in the great line, and let their sum illuminate the path.
+Four digits guard the treasure within—two carry naught, two bear more.
+Align them rightly, and the hidden chamber shall yield its secret.”</p>`
+  },
+  {
+    title: "The Covenant Fulfilled",
+    text: `<p><i>By your wit, perseverance, and careful reasoning, you have traversed the trials set forth by the Master Alchemist.</i></p>
+
+<p><b>The Seal of Mastery</b>
+Let it be known that the secrets of the Cube have yielded to your intellect.
+The mysteries are unveiled, the riddles solved.
+Carry this knowledge with honor,
+for it is a mark of your cunning and resolve.</p>
+
+<p>The final prize awaits in the presence of <b>The Master Alchemist</b>.
+May your alchemical pursuits continue to flourish,
+and may the sparks of curiosity guide your path ever onward.</p>
+
+<p>— <i>The Master Alchemist</i></p>`
+  }
+];
+
+
+
+let index = 0;
+let timerInterval = null;
+const riddleTimers = riddles.map(() => 20 * 60); // 20 min per riddle
+
+// Define secret codes for each riddle (except the last, which has no next)
+const secretCodes = [
+    "123", // code for riddle 0 -> 1
+    "456", // code for riddle 1 -> 2
+    "789", // code for riddle 2 -> 3
+    "321", // riddle 3 -> 4
+    "654", // riddle 4 -> 5
+    "987", // riddle 5 -> 6
+    "111"  // riddle 6 -> 7
+];
+
+/* ------------------------ SHOW RIDDLE ------------------------ */
+function showRiddle() {
+    const r = riddles[index];
+
+    document.getElementById("title").innerHTML = r.title;
+    document.getElementById("content").innerHTML = r.text;
+
+    const timerDiv = document.getElementById("timer");
+    const first = index === 0;
+    const last = index === riddles.length - 1;
+
+    document.getElementById("prevBtn").style.display = first ? "none" : "inline-block";
+    document.getElementById("nextBtn").style.display = last ? "none" : "inline-block";
+
+    if (first || last) {
+        timerDiv.textContent = "";
+        stopTimer();
+    } else {
+        startTimer(index); // start the timer for this riddle
+    }
+}
+
+/* ------------------------ TIMER ------------------------ */
+function startTimer(riddleIndex) {
+    stopTimer();
+
+    const timerDiv = document.getElementById("timer");
+
+    function update() {
+        let remaining = riddleTimers[riddleIndex];
+        let m = Math.floor(remaining / 60);
+        let s = remaining % 60;
+        timerDiv.textContent = `⧗ ${m.toString().padStart(2,"0")}:${s.toString().padStart(2, "0")}`;
+
+        if (remaining <= 0) {
+            stopTimer();
+            timerDiv.textContent = "⧗ 00:00";
+        } else {
+            riddleTimers[riddleIndex]--; // decrement for this riddle
+        }
+    }
+
+    update();
+    timerInterval = setInterval(update, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+/* ------------------------ NAVIGATION ------------------------ */
+function nextRiddle() {
+    if (index < riddles.length - 1) {
+        // Skip code check for the first riddle (index 0)
+        if (index === 0) {
+            index++;
+            showRiddle();
+            return;
+        }
+
+        // Prompt user for code for other pages
+        const userCode = prompt("Enter the 3-digit secret code to proceed:");
+        if (userCode === secretCodes[index]) {
+            index++;
+            showRiddle();
+        } else {
+            alert("Incorrect code! You cannot proceed.");
+        }
+    }
+}
+
+function prevRiddle() {
+    if (index > 0) {
+        index--;
+        showRiddle();
+    }
+}
+
+/* ------------------------ PARTICLES ------------------------ */
+function createParticles() {
+    for (let i = 0; i < 40; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.width = p.style.height = Math.random() * 4 + 2 + "px";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.animationDuration = 6 + Math.random() * 10 + "s";
+        document.body.appendChild(p);
+    }
+}
+
+createParticles();
+showRiddle();
+</script>
+
+</body>
+</html>
